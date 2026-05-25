@@ -12,10 +12,6 @@ from scripts.recommendation import (
     run_recommendation
 )
 
-from scripts.classification import (
-    run_classification
-)
-
 # =========================================
 # MAIN PIPELINE
 # =========================================
@@ -63,14 +59,6 @@ def main():
     print("\nRunning Recommendation System...\n")
 
     run_recommendation(df)
-
-    # =====================================
-    # CLASSIFICATION
-    # =====================================
-
-    print("\nRunning Classification...\n")
-
-    run_classification(df)
 
     # =====================================
     # EXPORT FINAL DATASET
