@@ -8,21 +8,7 @@ from sklearn.decomposition import PCA
 
 def run_feature_engineering(df):
 
-    # =========================================
-    # CREATE RATING RATIO
-    # =========================================
-
-    df['rating_ratio'] = (
-        df['positive_ratings']
-        /
-        (
-            df['positive_ratings']
-            +
-            df['negative_ratings']
-            +
-            1
-        )
-    )
+    # rating_ratio was created during EDA
 
     print(
         df[

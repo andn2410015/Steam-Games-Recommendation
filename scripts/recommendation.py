@@ -31,6 +31,9 @@ def recommend_games(
 
         for tag in user_tags:
 
+            # Missing steamspy_tags values are treated as False
+            # during tag filtering (excluded from recommendations)
+
             filtered_df = filtered_df[
                 filtered_df['steamspy_tags']
                 .str.contains(
