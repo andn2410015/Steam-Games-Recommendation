@@ -53,7 +53,7 @@ def run_clustering(
     )
 
     plt.savefig(
-        "plots/16_kmeans_clusters.png"
+        "plots/18_kmeans_clusters.png"
     )
 
     plt.show()
@@ -69,7 +69,7 @@ def run_clustering(
     print(cluster_analysis)
 
     cluster_analysis.to_csv(
-        "plots/17_cluster_analysis.csv"
+        "plots/19_cluster_analysis.csv"
     )
 
     # =========================================
@@ -128,7 +128,7 @@ def run_clustering(
     )
 
     plt.savefig(
-        "plots/18_elbow_method.png"
+        "plots/20_elbow_method.png"
     )
 
     plt.show()
@@ -153,7 +153,7 @@ def run_clustering(
     plt.ylabel("Number of Games")
 
     plt.savefig(
-        "plots/19_cluster_distribution.png"
+        "plots/21_cluster_distribution.png"
     )
 
     plt.show()

@@ -147,6 +147,56 @@ def run_feature_engineering(df):
     plt.show()
 
     # =========================================
+    # PLAYTIME BEFORE LOG
+    # =========================================
+
+    plt.figure(figsize=(8,5))
+
+    plt.hist(
+        df['average_playtime'],
+        bins=30
+    )
+
+    plt.title(
+        "Playtime Before Log Transform"
+    )
+
+    plt.xlabel("Average Playtime")
+
+    plt.ylabel("Frequency")
+
+    plt.savefig(
+        "plots/15_playtime_before_log.png"
+    )
+
+    plt.show()
+
+    # =========================================
+    # PLAYTIME AFTER LOG
+    # =========================================
+
+    plt.figure(figsize=(8,5))
+
+    plt.hist(
+        df['log_playtime'],
+        bins=30
+    )
+
+    plt.title(
+        "Playtime After Log Transform"
+    )
+
+    plt.xlabel("Log Playtime")
+
+    plt.ylabel("Frequency")
+
+    plt.savefig(
+        "plots/16_playtime_after_log.png"
+    )
+
+    plt.show()
+
+    # =========================================
     # ENGAGEMENT SCORE
     # =========================================
 
@@ -272,7 +322,7 @@ def run_feature_engineering(df):
     )
 
     plt.savefig(
-        "plots/15_pca_projection.png"
+        "plots/17_pca_projection.png"
     )
 
     plt.show()
