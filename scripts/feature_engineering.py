@@ -8,6 +8,10 @@ from sklearn.decomposition import PCA
 
 def run_feature_engineering(df):
 
+    # =========================================
+    # PRINT PREVIEW RATIO DISTRIBUTION
+    # =========================================
+
     # rating_ratio was created during EDA
 
     print(
