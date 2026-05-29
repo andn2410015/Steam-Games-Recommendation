@@ -48,18 +48,20 @@ def run_eda():
     plt.figure(figsize=(8,5))
 
     plt.hist(
-        np.log1p(df['price']),
+        df['price'],
         bins=30
     )
 
-    plt.title("Log Price Distribution")
+    plt.yscale('log')
 
-    plt.xlabel("Log(Price + 1)")
+    plt.title("Price Distribution")
+
+    plt.xlabel("Price")
 
     plt.ylabel("Frequency")
 
     plt.savefig(
-        "plots/01_log_price_distribution.png"
+        "plots/01_price_distribution.png"
     )
 
     plt.show()

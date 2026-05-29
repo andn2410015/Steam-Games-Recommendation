@@ -33,7 +33,7 @@ def run_clustering(
 
     plt.figure(figsize=(8,6))
 
-    plt.scatter(
+    scatter = plt.scatter(
         df['pca1'],
         df['pca2'],
         c=df['cluster'],
@@ -50,6 +50,11 @@ def run_clustering(
 
     plt.ylabel(
         "PCA 2"
+    )
+
+    plt.legend(
+        *scatter.legend_elements(),
+        title="Cluster"
     )
 
     plt.savefig(
