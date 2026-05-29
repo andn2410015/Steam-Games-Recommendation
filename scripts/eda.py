@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -47,18 +48,18 @@ def run_eda():
     plt.figure(figsize=(8,5))
 
     plt.hist(
-        df['price'],
+        np.log1p(df['price']),
         bins=30
     )
 
-    plt.title("Price Distribution")
+    plt.title("Log Price Distribution")
 
-    plt.xlabel("Price")
+    plt.xlabel("Log(Price + 1)")
 
     plt.ylabel("Frequency")
 
     plt.savefig(
-        "plots/01_price_distribution.png"
+        "plots/01_log_price_distribution.png"
     )
 
     plt.show()
