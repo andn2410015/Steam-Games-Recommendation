@@ -24,6 +24,23 @@ def run_eda():
     print(df.head())
 
     # =========================================
+    # CLEAN OWNERS COLUMN
+    # =========================================
+
+    df['owners'] = (
+        df['owners']
+        .str.split('-')
+    )
+
+    df['owners'] = df['owners'].apply(
+        lambda x:
+        (
+            int(x[0]) +
+            int(x[1])
+        ) / 2
+    )
+
+    # =========================================
     # BASIC INFORMATION
     # =========================================
 
@@ -77,15 +94,13 @@ def run_eda():
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title("Owners Distribution")
 
     plt.xlabel("Owners")
 
-    plt.ylabel("Frequency")
-
-    plt.xticks(rotation=45, ha='right')
-
-    plt.tight_layout()
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/02_owners_distribution.png"
@@ -104,11 +119,13 @@ def run_eda():
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title("Average Playtime Distribution")
 
     plt.xlabel("Average Playtime")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/03_average_playtime_distribution.png"
@@ -127,11 +144,13 @@ def run_eda():
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title("Positive Ratings Distribution")
 
     plt.xlabel("Positive Ratings")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/04_positive_ratings_distribution.png"
@@ -143,8 +162,14 @@ def run_eda():
     # TOP 10 MOST COMMON GENRES
     # =========================================
 
-    top_genres = (
+    genre_series = (
         df['genres']
+        .str.split(';')
+        .explode()
+    )
+
+    top_genres = (
+        genre_series
         .value_counts()
         .head(10)
     )
@@ -172,8 +197,14 @@ def run_eda():
     # TOP 10 MOST COMMON TAGS
     # =========================================
 
-    top_tags = (
+    tag_series = (
         df['steamspy_tags']
+        .str.split(';')
+        .explode()
+    )
+
+    top_tags = (
+        tag_series
         .value_counts()
         .head(10)
     )
@@ -249,13 +280,14 @@ def run_eda():
             'negative_ratings',
             'rating_ratio'
         ]
-    ].select_dtypes(include='number').corr()
+    ].corr()
 
     plt.figure(figsize=(10,8))
 
     sns.heatmap(
         corr,
         annot=True,
+        fmt=".2f",
         cmap='coolwarm'
     )
 
@@ -279,15 +311,15 @@ def run_eda():
         alpha=0.5
     )
 
+    plt.xscale('log')
+
+    plt.yscale('log')
+
     plt.title("Owners vs Average Playtime")
 
-    plt.xlabel("Owners")
+    plt.xlabel("Owners (log scale)")
 
-    plt.ylabel("Average Playtime")
-
-    plt.xticks(rotation=45, ha='right')
-
-    plt.tight_layout()
+    plt.ylabel("Average Playtime (log scale)")
 
     plt.savefig(
         "plots/09_owners_vs_playtime.png"
@@ -340,6 +372,8 @@ def run_eda():
     # =========================================
     # FINAL CLEAN DATASET PREVIEW
     # =========================================
+
+    print(df.info())
 
     print(df.head())
 

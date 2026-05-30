@@ -11,12 +11,122 @@ def run_clustering(
 ):
 
     # =========================================
+    # SILHOUETTE ANALYSIS
+    # =========================================
+
+    silhouette_scores = []
+
+    for k in range(2, 11):
+
+        model = KMeans(
+            n_clusters=k,
+            random_state=42,
+            n_init=10
+        )
+
+        labels = model.fit_predict(
+            X_pca
+        )
+
+        score = silhouette_score(
+            X_pca,
+            labels
+        )
+
+        silhouette_scores.append(score)
+
+        print(
+            f"K={k}: {score:.4f}"
+        )
+
+    plt.figure(figsize=(8,5))
+
+    plt.plot(
+        range(2,11),
+        silhouette_scores,
+        marker='o'
+    )
+
+    plt.title(
+        "Silhouette Scores"
+    )
+
+    plt.xlabel(
+        "Number of Clusters"
+    )
+
+    plt.ylabel(
+        "Silhouette Score"
+    )
+
+    plt.savefig(
+        "plots/18_silhouette_scores.png"
+    )
+
+    plt.show()
+
+    # =========================================
+    # ELBOW METHOD
+    # =========================================
+
+    inertia_values = []
+
+    k_values = range(1, 11)
+
+    for k in k_values:
+
+        kmeans = KMeans(
+            n_clusters=k,
+            random_state=42,
+            n_init=10
+        )
+
+        kmeans.fit(X_pca)
+
+        inertia_values.append(
+            kmeans.inertia_
+        )
+
+    plt.figure(figsize=(8,5))
+
+    plt.plot(
+        k_values,
+        inertia_values,
+        marker='o'
+    )
+
+    plt.title(
+        "Elbow Method"
+    )
+
+    plt.xlabel(
+        "Number of Clusters"
+    )
+
+    plt.ylabel(
+        "Inertia"
+    )
+
+    plt.savefig(
+        "plots/19_elbow_method.png"
+    )
+
+    plt.show()
+
+    # =========================================
+    # FINAL K VALUE
+    # =========================================
+
+    best_k = 4
+
+    # =========================================
     # KMEANS CLUSTERING
     # =========================================
 
     kmeans = KMeans(
-        n_clusters=4,
-        random_state=42
+        n_clusters=best_k,
+        random_state=42,
+        n_init=10
     )
 
     df['cluster'] = kmeans.fit_predict(
@@ -26,6 +136,16 @@ def run_clustering(
     print(
         df['cluster'].value_counts()
     )
+
+    cluster_sizes = (
+        df['cluster']
+        .value_counts()
+        .sort_index()
+    )
+
+    print("\nCluster Sizes")
+
+    print(cluster_sizes)
 
     # =========================================
     # CLUSTER VISUALIZATION
@@ -58,82 +178,7 @@ def run_clustering(
     )
 
     plt.savefig(
-        "plots/18_kmeans_clusters.png"
-    )
-
-    plt.show()
-
-    # =========================================
-    # CLUSTER ANALYSIS
-    # =========================================
-
-    cluster_analysis = df.groupby(
-        'cluster'
-    )[features].mean()
-
-    print(cluster_analysis)
-
-    cluster_analysis.to_csv(
-        "plots/19_cluster_analysis.csv"
-    )
-
-    # =========================================
-    # SILHOUETTE SCORE
-    # =========================================
-
-    score = silhouette_score(
-        X_pca,
-        df['cluster']
-    )
-
-    print(
-        "Silhouette Score:",
-        score
-    )
-
-    # =========================================
-    # ELBOW METHOD
-    # =========================================
-
-    inertia_values = []
-
-    k_values = range(1, 11)
-
-    for k in k_values:
-
-        kmeans = KMeans(
-            n_clusters=k,
-            random_state=42
-        )
-
-        kmeans.fit(X_pca)
-
-        inertia_values.append(
-            kmeans.inertia_
-        )
-
-    plt.figure(figsize=(8,5))
-
-    plt.plot(
-        k_values,
-        inertia_values,
-        marker='o'
-    )
-
-    plt.title(
-        "Elbow Method"
-    )
-
-    plt.xlabel(
-        "Number of Clusters"
-    )
-
-    plt.ylabel(
-        "Inertia"
-    )
-
-    plt.savefig(
-        "plots/20_elbow_method.png"
+        "plots/20_kmeans_clusters.png"
     )
 
     plt.show()
@@ -162,5 +207,41 @@ def run_clustering(
     )
 
     plt.show()
+
+    # =========================================
+    # CLUSTER ANALYSIS
+    # =========================================
+
+    cluster_analysis = (
+        df.groupby('cluster')[features]
+        .mean()
+        .round(3)
+    )
+
+    print("\nCluster Analysis")
+
+    print(cluster_analysis.round(3))
+
+    # =========================================
+    # CLUSTER PROFILES
+    # =========================================
+
+    print("\nCluster Profiles")
+
+    for cluster_id in cluster_analysis.index:
+
+        print("\n" + "=" * 50)
+        print(f"Cluster {cluster_id}")
+        print("=" * 50)
+
+        print(
+            cluster_analysis
+            .round(3)
+            .loc[cluster_id]
+        )
+
+    cluster_analysis.round(3).to_csv(
+        "plots/22_cluster_analysis.csv"
+    )
 
     return df

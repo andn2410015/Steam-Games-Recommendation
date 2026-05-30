@@ -1,3 +1,5 @@
+import pandas as pd
+
 def recommend_games(
     df,
     user_age,
@@ -8,17 +10,17 @@ def recommend_games(
 ):
 
     # LOWERCASE
-    df['steamspy_tags'] = (
-        df['steamspy_tags']
-        .str.lower()
-    )
-
-    df['platforms'] = (
-        df['platforms']
-        .str.lower()
-    )
-
     filtered_df = df.copy()
+
+    filtered_df['steamspy_tags'] = (
+        filtered_df['steamspy_tags']
+        .str.lower()
+    )
+
+    filtered_df['platforms'] = (
+        filtered_df['platforms']
+        .str.lower()
+    )
 
     # AGE FILTER
     filtered_df = filtered_df[
@@ -68,15 +70,24 @@ def recommend_games(
             "No matching games found."
         )
 
-        return
+        return pd.DataFrame()
+    
+    filtered_df = filtered_df.copy()
 
     # RANKING SCORE
+    # ranking_score combines:
+    # - rating quality
+    # - popularity
+    # - playtime
+    # - engagement
     filtered_df['ranking_score'] = (
-        filtered_df['scaled_rating_ratio'] * 0.7
+        filtered_df['scaled_rating_ratio'] * 0.5
         +
         filtered_df['scaled_log_owners'] * 0.2
         +
-        filtered_df['scaled_log_playtime'] * 0.1
+        filtered_df['scaled_log_playtime'] * 0.15
+        +
+        filtered_df['scaled_engagement_score'] * 0.15
     )
 
     # SORT RECOMMENDATIONS
@@ -88,11 +99,14 @@ def recommend_games(
     return filtered_df[
         [
             'name',
-            'steamspy_tags',
             'price',
             'platforms',
-            'ranking_score',
-            'cluster'
+            'steamspy_tags',
+            'rating_ratio',
+            'owners',
+            'average_playtime',
+            'cluster',
+            'ranking_score'
         ]
     ].head(top_n)
 
@@ -107,4 +121,5 @@ def run_recommendation(df):
         platform='windows'
     )
 
-    print(recommendations)
+    print("\nTop Recommended Games: ")
+    return recommendations

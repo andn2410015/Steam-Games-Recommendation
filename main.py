@@ -58,15 +58,32 @@ def main():
 
     print("\nRunning Recommendation System...\n")
 
-    run_recommendation(df)
+    recommendations = run_recommendation(df)
+
+    print("\nTop Recommended Games")
+
+    print(recommendations)
 
     # =====================================
     # EXPORT FINAL DATASET
     # =====================================
 
     df.to_csv(
-        "steam_games_clustered.csv",
+        "data/steam_games_clustered.csv",
         index=False
+    )
+
+    print(
+        f"\nFinal Dataset Shape: {df.shape}"
+    )
+
+
+    print(
+        "\nClustered dataset saved to:"
+    )
+
+    print(
+        "data/steam_games_clustered.csv"
     )
 
     print("\nProject Finished Successfully!")

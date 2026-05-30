@@ -54,26 +54,6 @@ def run_feature_engineering(df):
     plt.show()
 
     # =========================================
-    # CLEAN OWNERS COLUMN
-    # =========================================
-
-    # Convert owner ranges into average values
-
-    df['owners'] = (
-        df['owners']
-        .str.split('-')
-    )
-
-    df['owners'] = df['owners'].apply(
-        lambda x:
-        (
-            int(x[0]) + int(x[1])
-        ) / 2
-    )
-
-    print(df['owners'].head())
-
-    # =========================================
     # LOG TRANSFORMATION
     # =========================================
 
@@ -107,13 +87,15 @@ def run_feature_engineering(df):
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title(
         "Owners Before Log Transform"
     )
 
     plt.xlabel("Owners")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/13_owners_before_log_transform.png"
@@ -132,13 +114,15 @@ def run_feature_engineering(df):
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title(
         "Owners After Log Transform"
     )
 
     plt.xlabel("Log Owners")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/14_owners_after_log_transform.png"
@@ -157,13 +141,15 @@ def run_feature_engineering(df):
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title(
         "Playtime Before Log Transform"
     )
 
     plt.xlabel("Average Playtime")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/15_playtime_before_log.png"
@@ -182,13 +168,15 @@ def run_feature_engineering(df):
         bins=30
     )
 
+    plt.yscale('log')
+
     plt.title(
         "Playtime After Log Transform"
     )
 
     plt.xlabel("Log Playtime")
 
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (log scale)")
 
     plt.savefig(
         "plots/16_playtime_after_log.png"
@@ -201,11 +189,9 @@ def run_feature_engineering(df):
     # =========================================
 
     df['engagement_score'] = (
-        df['average_playtime']
-        /
-        (
-            df['owners'] + 1
-        )
+        df['rating_ratio']
+        *
+        df['log_playtime']
     )
 
     print(
@@ -249,11 +235,11 @@ def run_feature_engineering(df):
         columns=features
     )
 
-    df['scaled_rating_ratio'] = scaled_df['rating_ratio']
+    for col in features:
 
-    df['scaled_log_owners'] = scaled_df['log_owners']
-
-    df['scaled_log_playtime'] = scaled_df['log_playtime']
+        df[f'scaled_{col}'] = (
+            scaled_df[col]
+        )
 
     print(X_scaled[:5])
 
@@ -270,6 +256,16 @@ def run_feature_engineering(df):
         X_scaled
     )
 
+    loadings = pd.DataFrame(
+        pca.components_.T,
+        columns=['PC1','PC2'],
+        index=features
+    )
+
+    print(
+        loadings.round(3)
+    )
+
     print(
         "Explained Variance Ratio:",
         pca.explained_variance_ratio_
@@ -279,6 +275,23 @@ def run_feature_engineering(df):
         "Total Explained Variance:",
         pca.explained_variance_ratio_.sum()
     )
+
+    # =========================================
+    # PCA VARIANCE TABLE
+    # =========================================
+
+    variance_df = pd.DataFrame({
+        'Component': ['PC1', 'PC2'],
+        'Variance': pca.explained_variance_ratio_
+    })
+
+    variance_df['Cumulative'] = (
+        variance_df['Variance']
+        .cumsum()
+    )
+
+    print("\nPCA Variance Table")
+    print(variance_df)
 
     # =========================================
     # ADD PCA COLUMNS

@@ -13,17 +13,29 @@ pd.set_option('display.max_colwidth', None)
 
 # LOAD DATA
 df = pd.read_csv(
-    "steam_games_clustered.csv"
+    "data/steam_games_clustered.csv"
 )
 
 # GET RECOMMENDATIONS
 recommendations = recommend_games(
     df,
     user_age=17,
-    user_tags=['open world'],
+    user_tags=['action'],
     max_price=20,
     platform='windows'
 )
 
 # PRINT RESULTS
-print(recommendations)
+if recommendations.empty:
+
+    print(
+        "No recommendations found."
+    )
+
+else:
+
+    print(
+        "\nTop Recommended Games"
+    )
+
+    print(recommendations)
