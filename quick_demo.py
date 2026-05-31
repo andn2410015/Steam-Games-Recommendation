@@ -20,7 +20,7 @@ df = pd.read_csv(
 recommendations = recommend_games(
     df,
     user_age=17,
-    user_tags=['action'],
+    user_tags=['action', 'indie'],
     max_price=20,
     platform='windows'
 )

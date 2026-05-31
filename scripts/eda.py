@@ -58,6 +58,10 @@ def run_eda():
 
     print(df.isnull().sum())
 
+    #Clean Missing Values
+    df['publisher'] = df['publisher'].fillna('Unknown')
+    df['developer'] = df['developer'].fillna('Unknown')
+
     # =========================================
     # PRICE DISTRIBUTION
     # =========================================
